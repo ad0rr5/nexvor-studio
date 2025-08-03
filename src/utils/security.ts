@@ -27,7 +27,7 @@ export const sanitizeText = (text: string): string => {
 
 /**
  * Validate and sanitize URLs to prevent malicious redirects
- * Only allows http, https, and mailto protocols
+ * Allows http, https, mailto protocols and relative paths
  */
 export const validateURL = (url: string): string => {
   if (typeof url !== 'string') return '#';
@@ -35,7 +35,12 @@ export const validateURL = (url: string): string => {
   // Remove any potential XSS attempts
   const cleanUrl = sanitizeText(url);
   
-  // Allow only safe protocols
+  // Allow relative paths starting with ./ or /
+  if (cleanUrl.startsWith('./') || cleanUrl.startsWith('/')) {
+    return cleanUrl;
+  }
+  
+  // Allow only safe protocols for absolute URLs
   const allowedProtocols = ['http:', 'https:', 'mailto:'];
   
   try {
@@ -44,6 +49,10 @@ export const validateURL = (url: string): string => {
       return cleanUrl;
     }
   } catch {
+    // If no protocol specified, assume https for external links
+    if (cleanUrl.startsWith('www.') || cleanUrl.includes('.')) {
+      return `https://${cleanUrl}`;
+    }
     // Invalid URL format
     return '#';
   }

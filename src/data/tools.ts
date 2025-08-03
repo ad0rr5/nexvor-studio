@@ -22,7 +22,7 @@ export const toolsData: Project[] = [
     "featured": true,
     "detailedDescription": "Yapay zeka destekli renk paleti oluşturucu ile projeleriniz için mükemmel renk kombinasyonları yaratın. Tema seçimi, renk teorisi uygulaması ve export özelliği ile tasarım sürecinizi hızlandırın.",
     "features": ["AI destekli", "Tema seçenekleri", "Export desteği", "Renk teorisi", "Hex/RGB kodları"],
-    "link": "https://example.com/renk-paleti"
+    "link": "./apps/nexvor-palette.html"
   },
   {
     "id": 4,
@@ -42,6 +42,6 @@ export const toolsData: Project[] = [
     "featured": true,
     "detailedDescription": "Profesyonel QR kodları kolayca oluşturun. URL, metin, e-posta, telefon numarası, WiFi şifresi ve daha birçok format için özelleştirebilir QR kodlar yaratın.",
     "features": ["Çoklu format", "Özelleştirme", "Toplu oluşturma", "SVG export", "Analitik takip"],
-    "link": "https://example.com/qr-kod"
+    "link": "./apps/nexvor-qr.html"
   }
 ];

@@ -34,7 +34,7 @@ export const ProjectDetailModal = ({ project, isOpen, onClose }: ProjectDetailMo
   // Handle escape key press
   useEffect(() => {
     const handleEscape = createEscapeHandler(handleClose);
-    
+
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
     }
@@ -46,7 +46,7 @@ export const ProjectDetailModal = ({ project, isOpen, onClose }: ProjectDetailMo
 
   const handleClose = () => {
     setIsClosing(true);
-    
+
     setTimeout(() => {
       setMounted(false);
       setIsClosing(false);
@@ -67,25 +67,25 @@ export const ProjectDetailModal = ({ project, isOpen, onClose }: ProjectDetailMo
   if (!mounted || !project) return null;
 
   return (
-    <div 
-      className={`modal-overlay ${isClosing ? 'closing' : ''}`} 
+    <div
+      className={`modal-overlay ${isClosing ? 'closing' : ''}`}
       onClick={handleOverlayClick}
       style={{ pointerEvents: isClosing ? 'none' : 'auto' }}
     >
-      <div 
-        className="modal-content" 
+      <div
+        className="modal-content"
         role="dialog"
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
       >
-        <button 
-          className="modal-close" 
+        <button
+          className="modal-close"
           onClick={handleClose}
           aria-label="Modalı kapat"
         >
           ×
         </button>
-        
+
         <ModalHeader project={project} />
         <ModalBody project={project} />
         <ModalFooter project={project} onLinkClick={handleLinkClick} />
@@ -108,14 +108,14 @@ const ModalBody = ({ project }: { project: Project }) => (
     <p id="modal-description" className="modal-description">
       {project.detailedDescription || project.description}
     </p>
-    
+
     {project.features && project.features.length > 0 && (
       <div className="modal-features">
         <h3>Özellikler:</h3>
         <ul>
           {project.features.map((feature, index) => (
-            <li 
-              key={index} 
+            <li
+              key={index}
               style={{ animationDelay: `${0.7 + index * 0.1}s` }}
             >
               {feature}
@@ -135,7 +135,7 @@ interface ModalFooterProps {
 const ModalFooter = ({ project, onLinkClick }: ModalFooterProps) => {
   // Validate and sanitize the link before rendering
   const safeLink = project.link ? validateURL(project.link) : null;
-  
+
   const handleSecureClick = (e: React.MouseEvent) => {
     onLinkClick(e);
     if (safeLink && safeLink !== '#') {
@@ -148,18 +148,26 @@ const ModalFooter = ({ project, onLinkClick }: ModalFooterProps) => {
     e.preventDefault();
     return false;
   };
-  
+
+  // Determine button text based on project type
+  const getButtonText = () => {
+    if (project.id === 8) { // QR Kod Oluşturucu
+      return '🚀 QR Oluşturucu\'ya Git';
+    }
+    return '🚀 Projeyi Görüntüle';
+  };
+
   return (
     <div className="modal-footer">
       {safeLink && safeLink !== '#' && (
-        <a 
-          href={safeLink} 
-          target="_blank" 
+        <a
+          href={safeLink}
+          target="_blank"
           rel="noopener noreferrer nofollow" // Added nofollow for additional security
           className="modal-link-btn"
           onClick={handleSecureClick}
         >
-          🚀 Projeyi Görüntüle
+          {getButtonText()}
         </a>
       )}
     </div>

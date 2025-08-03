@@ -37,7 +37,7 @@
     "featured": true,
     "detailedDescription": "URL, metin, WiFi bilgileri ve daha fazlası için özelleştirilebilir QR kodları oluşturun. Renk seçimi, logo ekleme ve farklı format seçenekleri mevcut.",
     "features": ["Çoklu format desteği", "Logo ekleme", "Renk özelleştirme", "Toplu oluşturma", "Analytics"],
-    "link": "https://example.com/qr-generator"
+    "link": "./public/apps/nexvor-qr.html"
   },
   {
     "id": 9,

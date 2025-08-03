@@ -232,6 +232,23 @@ nav button.active {
     min-height: calc(100vh - 70px); /* Header yüksekliği hariç */
     text-align: center;
     overflow: hidden;
+    background-image: url('https://i.hizliresim.com/1r2p0as.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* Hero için overlay - metin okunabilirliği için */
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
 }
 
 .hero-bg {
@@ -241,10 +258,9 @@ nav button.active {
     right: 0;
     bottom: 0;
     z-index: -1;
-    background: linear-gradient(45deg, var(--hero-gradient-1), var(--hero-gradient-2));
-    background-size: 200% 200%;
-    animation: gradient-animation 15s ease infinite;
-    transition: background var(--transition-speed) ease;
+    /* Gradient animasyonu kaldırıldı, arka plan resmi kullanılıyor */
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease;
 }
 
 @keyframes gradient-animation {
@@ -255,21 +271,26 @@ nav button.active {
 
 .hero-content {
     max-width: 800px;
+    position: relative;
+    z-index: 2;
 }
 
 .hero-title {
     font-size: clamp(2.5rem, 5vw, 4rem);
     font-weight: 700;
     margin-bottom: 1rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .hero-subtitle {
     font-size: clamp(1rem, 2.5vw, 1.25rem);
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.9);
     margin-bottom: 2rem;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 a.cta-button, button.cta-button {
@@ -692,6 +713,16 @@ a.cta-button.secondary:hover, button.cta-button.secondary:hover {
 
   .section-subtitle {
     font-size: 1.8rem;
+  }
+
+  /* Hero Section - Mobil optimizasyonu */
+  .hero-section {
+    background-attachment: scroll; /* Mobilde fixed yerine scroll */
+    min-height: calc(100vh - 60px);
+  }
+
+  .hero-section::before {
+    background: rgba(0, 0, 0, 0.5); /* Mobilde daha koyu overlay */
   }
 }
 
