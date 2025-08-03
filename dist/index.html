@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Temel Güvenlik Meta Etiketleri -->
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <title>Nexvor Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script>
+      // Flash of Unstyled Content (FOUC) önlemek için temayı anında uygula
+      (function() {
+        const storedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+  <script type="module" crossorigin src="/assets/index-DGIm24Hw.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/vendor-CiW5Bwbg.js">
+  <link rel="stylesheet" crossorigin href="/assets/index-Bkqmwcw9.css">
+</head>
+<body>
+    <div id="root"></div>
+</body>
+</html>

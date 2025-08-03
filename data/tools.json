@@ -1,0 +1,62 @@
+[
+  {
+    "id": 2,
+    "title": "PDF'den PNG'ye",
+    "description": "PDF dosyalarınızı yüksek kalitede, ayrı PNG resimlerine dönüştürün.",
+    "icon": "📄",
+    "featured": true,
+    "detailedDescription": "PDF dosyalarınızı profesyonel kalitede PNG formatına dönüştürün. Toplu işlem desteği ile birden fazla dosyayı aynı anda işleyebilir, çözünürlük ve kalite ayarlarını özelleştirebilirsiniz.",
+    "features": ["Toplu dönüştürme", "Kalite ayarları", "Hızlı işlem", "Ücretsiz kullanım", "Güvenli upload"],
+    "link": "https://example.com/pdf-to-png"
+  },
+  {
+    "id": 3,
+    "title": "Renk Paleti Oluşturucu",
+    "description": "Yapay zeka destekli aracımızla projeniz için mükemmel renk paletleri yaratın.",
+    "icon": "🎨",
+    "featured": true,
+    "detailedDescription": "Yapay zeka destekli renk paleti oluşturucu ile projeleriniz için mükemmel renk kombinasyonları yaratın. Tema seçimi, renk teorisi uygulaması ve export özelliği ile tasarım sürecinizi hızlandırın.",
+    "features": ["AI destekli", "Tema seçenekleri", "Export desteği", "Renk teorisi", "Hex/RGB kodları"],
+    "link": "https://example.com/renk-paleti"
+  },
+  {
+    "id": 4,
+    "title": "Logo Tasarımcısı",
+    "description": "Markanız için saniyeler içinde profesyonel logolar oluşturun.",
+    "icon": "✨",
+    "featured": false,
+    "detailedDescription": "Profesyonel logo tasarımcısı ile markanız için etkileyici logolar yaratın. Yüzlerce şablon, özelleştirme seçenekleri ve yüksek çözünürlük export ile logo tasarımı hiç bu kadar kolay olmamıştı.",
+    "features": ["500+ şablon", "Özelleştirme araçları", "HD export", "Font kütüphanesi", "Ticari kullanım"],
+    "link": "https://example.com/logo-tasarimci"
+  },
+  {
+    "id": 8,
+    "title": "QR Kod Oluşturucu",
+    "description": "Hızlıca QR kodları oluşturun ve özelleştirin.",
+    "icon": "📱",
+    "featured": true,
+    "detailedDescription": "URL, metin, WiFi bilgileri ve daha fazlası için özelleştirilebilir QR kodları oluşturun. Renk seçimi, logo ekleme ve farklı format seçenekleri mevcut.",
+    "features": ["Çoklu format desteği", "Logo ekleme", "Renk özelleştirme", "Toplu oluşturma", "Analytics"],
+    "link": "https://example.com/qr-generator"
+  },
+  {
+    "id": 9,
+    "title": "Metin Analiz Aracı",
+    "description": "Metinlerinizi analiz edin ve içerik kalitesini artırın.",
+    "icon": "📝",
+    "featured": false,
+    "detailedDescription": "Yazılarınızın kelime sayısı, okunabilirlik düzeyi, duygu analizi ve anahtar kelime yoğunluğu gibi önemli metrikleri analiz edin.",
+    "features": ["Kelime/karakter sayısı", "Okunabilirlik analizi", "Duygu analizi", "Anahtar kelime yoğunluğu", "SEO önerileri"],
+    "link": "https://example.com/text-analyzer"
+  },
+  {
+    "id": 10,
+    "title": "Şifre Oluşturucu",
+    "description": "Güvenli ve özelleştirilebilir şifreler oluşturun.",
+    "icon": "🔐",
+    "featured": false,
+    "detailedDescription": "Güçlü, güvenli şifreler oluşturun. Uzunluk, karakter türleri ve karmaşıklık seviyesini özelleştirin. Toplu şifre oluşturma özelliği ile birden fazla hesap için şifre yaratın.",
+    "features": ["Özelleştirilebilir uzunluk", "Karakter seçenekleri", "Güvenlik skorlaması", "Toplu oluşturma", "Şifre gücü analizi"],
+    "link": "https://example.com/password-generator"
+  }
+]
