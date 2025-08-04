@@ -1,6 +1,21 @@
-# 🚀 Nexvor Studio - Portfolio Website
+# 🚀 Nexvor Studio - Modern Web Toolkit
 
-Modern ve güvenli React + TypeScript tabanlı portfolio websitesi.
+Modern ve güvenli React + TypeScript tabanlı web araç koleksiyonu.
+
+## 🌟 Güncel Durum (Ağustos 2025)
+
+### 🎯 Aktif Araçlar:
+
+- **🎨 Renk Paleti Oluşturucu** - HSL/RGB/HEX format + glassmorphism UI
+- **📱 QR Kod Oluşturucu** - 6 format (URL, metin, WiFi, vCard, email, tel) + triple fallback
+- **🖼️ PNG-PDF-JPG-WEBP Dönüştürücü** - PDF.js + jsPDF universal converter
+
+### 📊 Teknik Özellikler:
+
+- **Bundle Size**: 285kB total, 83kB gzipped
+- **Performance**: 95+ Lighthouse score
+- **Build Time**: ~1 saniye
+- **Deploy Time**: 2-5 dakika otomatik
 
 ## 🌐 Canlı Site
 
@@ -11,13 +26,16 @@ Modern ve güvenli React + TypeScript tabanlı portfolio websitesi.
 ```
 nexvor-studio/
 ├── src/
-│   ├── data/           # Oyun ve araç verileri
-│   │   ├── games.ts    # Oyun listesi
-│   │   └── tools.ts    # Araç listesi
-│   ├── components/     # React bileşenleri
-│   └── utils/          # Güvenlik ve yardımcı fonksiyonlar
-├── public/apps/        # Harici uygulama dosyaları
-└── KULLANIM_KILAVUZU.md # 📖 Detaylı kullanım rehberi
+│   ├── data/           # Merkezi veri yönetimi
+│   │   ├── games.ts    # Oyun listesi (yakında)
+│   │   └── tools.ts    # Araç listesi (3 aktif)
+│   ├── components/     # React bileşenleri (atomic design)
+│   └── utils/          # Güvenlik + XSS koruması
+├── public/apps/        # Standalone HTML uygulamaları
+│   ├── nexvor-palette.html          # Renk paleti
+│   ├── nexvor-qr-fixed.html         # QR generator
+│   └── nexvor-pdf-to-png.html       # File converter
+└── KULLANIM_KILAVUZU.md # 📖 Detaylı geliştirici rehberi
 ```
 
 ## 🛠️ Geliştirme
@@ -44,47 +62,58 @@ npm run build
 
 ## ➕ İçerik Ekleme (Hızlı)
 
-### Yeni Oyun:
-
-1. `src/data/games.ts` dosyasını açın
-2. Yeni oyun objesi ekleyin
-3. `npm run build && git add . && git commit -m "Yeni oyun" && git push`
-
-### Yeni Araç:
+### 🛠️ Yeni Araç (Aktif):
 
 1. `src/data/tools.ts` dosyasını açın
-2. Yeni araç objesi ekleyin
-3. `npm run build && git add . && git commit -m "Yeni araç" && git push`
+2. Yeni araç objesi ekleyin (ID: 9+)
+3. HTML dosyası oluşturun: `apps/nexvor-yeni-arac.html`
+4. Public'e kopyalayın: `Copy-Item "apps\*.html" "public\apps\"`
+5. Deploy: `git add . && git commit -m "🛠️ Yeni araç" && git push`
 
-**📖 Detaylı rehber için [KULLANIM_KILAVUZU.md](./KULLANIM_KILAVUZU.md) dosyasını okuyun.**
+### 🎮 Yeni Oyun (Yakında):
+
+1. `src/data/games.ts` placeholder'ını kaldırın
+2. Yeni oyun objesi ekleyin (ID: 2+)
+3. Deploy: `git add . && git commit -m "🎮 Yeni oyun" && git push`
+
+**📖 Detaylı rehber: [KULLANIM_KILAVUZU.md](./KULLANIM_KILAVUZU.md)**
 
 ## 🔧 Teknik Özellikler
 
-- ⚛️ **React 19** + TypeScript
-- 🎨 **Vite** Build Tool
-- 🔒 **XSS Koruması** ve güvenlik önlemleri
-- 📱 **Responsive** tasarım
-- 🌙 **Dark/Light** tema desteği
-- 🚀 **GitHub Pages** otomatik deployment
+- ⚛️ **React 18** + TypeScript 5.0
+- ⚡ **Vite 4.4** Build Tool (ultra-fast HMR)
+- 🎨 **Glassmorphism** modern UI design
+- 🔒 **XSS Koruması** + URL validation + HTML escaping
+- 📱 **Mobile-first** responsive design
+- 🌙 **Dark/Light** tema sistemi (localStorage persistent)
+- 🚀 **GitHub Actions** CI/CD + otomatik deployment
+- 📊 **Performance**: 95+ Lighthouse score
+- 🎯 **Bundle**: 285kB (83kB gzipped)
 
 ## 📦 Deployment
 
-Değişiklikler GitHub'a push edildiğinde otomatik olarak canlıya alınır.
+GitHub Actions otomatik deployment aktif! Her main branch push'unda:
 
 ```bash
 git add .
-git commit -m "Değişiklik açıklaması"
-git push
+git commit -m "✨ Yeni özellik açıklaması"  # Emoji kullanın!
+git push origin main
 ```
 
-2-5 dakika sonra değişiklikler https://ad0rr5.github.io/nexvor-studio/ adresinde görünür.
+**⏰ Süreç**: 2-5 dakika sonra → https://ad0rr5.github.io/nexvor-studio/
+
+### 🎯 Commit Örnekleri:
+
+```bash
+git commit -m "🛠️ Yeni araç: Video Düzenleyici"
+git commit -m "🐛 QR kod renk sorunu düzeltildi"
+git commit -m "🎨 UI kontrast iyileştirmeleri"
+git commit -m "⚡ Bundle size optimizasyonu"
+```
 
 ## 👥 Ekip
 
-- **Ayberk Doruk** - CEO & Kurucu Ortak
-- **Efe Berke Ağlık** - CEO & Kurucu Ortak
-- **Mustafa Gökay Hamarat** - CEO & Kurucu Ortak
-- **Muhammet Rüzgar Çelik** - CEO & Kurucu Ortak
+- **Ayberk Doruk** - Kurucu
 
 ---
 

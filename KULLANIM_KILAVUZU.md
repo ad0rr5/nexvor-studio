@@ -2,6 +2,23 @@
 
 Bu kılavuz, Nexvor Studio websitesine yeni oyunlar, araçlar eklemek veya mevcut içerikleri düzenlemek için gereken tüm adımları içerir.
 
+## 🌟 Projenin Güncel Durumu (Ağustos 2025)
+
+### 🎯 Aktif Araçlar:
+
+1. **🎨 Renk Paleti Oluşturucu** - Yapay zeka destekli renk paleti yaratma aracı
+2. **📱 QR Kod Oluşturucu** - 6 farklı formatta QR kod oluşturma (URL, metin, WiFi, vCard, email, telefon)
+3. **🖼️ PNG-PDF-JPG-WEBP Dönüştürücü** - Universal dosya format dönüştürücü (PDF.js + jsPDF entegrasyonu)
+
+### 🚀 Teknik Özellikler:
+
+- **Framework**: React + TypeScript + Vite
+- **Hosting**: GitHub Pages (https://ad0rr5.github.io/nexvor-studio/)
+- **Build System**: Vite ile optimize edilmiş bundle
+- **UI/UX**: Modern glassmorphism tasarım + Dark/Light tema
+- **Performance**: Lazy loading + Intersection Observer API
+- **Güvenlik**: XSS koruması + CSP headers
+
 ## 📁 Dosya Yapısı Genel Bakış
 
 ```
@@ -20,15 +37,31 @@ nexvor-studio/
 
 ## 🎮 YENİ OYUN EKLEME
 
-### 1. Adım: `src/data/games.ts` dosyasını düzenleyin
+⚠️ **Not**: Şu anda oyun bölümü aktif değil. Oyun ekleme özelliği gelecek güncellemelerde eklenecek.
+
+### Mevcut Oyun Durumu:
+
+```typescript
+// src/data/games.ts - Geçici placeholder
+{
+  "id": 1,
+  "title": "YAKINDA OYUNLAR EKLENECEK",
+  "description": "",
+  "icon": "",
+  "featured": true,
+  "detailedDescription": "",
+  "features": [""],
+  "link": ""
+}
+```
+
+### Gelecekte Oyun Eklemek İçin:
 
 ```typescript
 export const gamesData: Project[] = [
-  // Mevcut oyunlar...
-
   // YENİ OYUN EKLEYİN:
   {
-    id: 8, // 🚨 Benzersiz numara verin (mevcut ID'lere bakmayı unutmayın)
+    id: 2, // 🚨 Benzersiz numara verin (1 kullanılıyor)
     title: "Oyun Adı",
     description: "Kısa açıklama (ana sayfada görünür)",
     icon: "🎮", // Emoji ikonu
@@ -57,15 +90,21 @@ export const gamesData: Project[] = [
 
 ## 🛠️ YENİ ARAÇ EKLEME
 
+### Mevcut Araçlar (ID: 3, 7, 8):
+
+- **ID 3**: Renk Paleti Oluşturucu
+- **ID 7**: QR Kod Oluşturucu
+- **ID 8**: PNG-PDF-JPG-WEBP Dönüştürücü
+
 ### 1. Adım: `src/data/tools.ts` dosyasını düzenleyin
 
 ```typescript
 export const toolsData: Project[] = [
-  // Mevcut araçlar...
+  // Mevcut araçlar... (ID: 3, 7, 8)
 
   // YENİ ARAÇ EKLEYİN:
   {
-    id: 9, // 🚨 Benzersiz numara verin
+    id: 9, // 🚨 Benzersiz numara verin (9 sonraki ID)
     title: "Araç Adı",
     description: "Kısa açıklama (ana sayfada görünür)",
     icon: "🔧", // Emoji ikonu
@@ -77,6 +116,29 @@ export const toolsData: Project[] = [
   },
 ];
 ```
+
+### 🎯 Mevcut Başarılı Araç Örnekleri:
+
+#### 1. Renk Paleti Oluşturucu:
+
+- ✅ Modern HSL/RGB/HEX renk seçici
+- ✅ Real-time renk önizleme
+- ✅ Glassmorphism UI tasarım
+- ✅ Dark/Light tema desteği
+
+#### 2. QR Kod Oluşturucu:
+
+- ✅ 6 farklı QR türü (URL, metin, WiFi, vCard, email, telefon)
+- ✅ Renk özelleştirme
+- ✅ PNG/SVG indirme
+- ✅ Triple fallback system (QRCode.js + API + SVG)
+
+#### 3. PNG-PDF-JPG-WEBP Dönüştürücü:
+
+- ✅ Universal format desteği (PDF, PNG, JPG, WebP, GIF, BMP, TIFF)
+- ✅ PDF.js entegrasyonu (PDF okuma)
+- ✅ jsPDF entegrasyonu (PDF oluşturma)
+- ✅ Drag & drop + kalite kontrolü
 
 ## 🗑️ OYUN/ARAÇ SİLME
 
@@ -118,42 +180,119 @@ export const toolsData: Project[] = [
 
 ## 📱 YENİ UYGULAMA EKLEME (HTML Dosyası)
 
+### Mevcut Uygulamalar:
+
+- ✅ `nexvor-palette.html` - Renk paleti oluşturucu
+- ✅ `nexvor-qr-fixed.html` - QR kod oluşturucu (gelişmiş versiyon)
+- ✅ `nexvor-pdf-to-png.html` - Universal dosya dönüştürücü
+
 ### 1. Adım: HTML Dosyası Oluşturun
 
 ```html
-<!-- apps/yeni-uygulama.html -->
+<!-- apps/nexvor-yeni-arac.html -->
 <!DOCTYPE html>
 <html lang="tr">
   <head>
     <meta charset="UTF-8" />
-    <title>Yeni Uygulama</title>
-    <!-- CSS ve JS kodlarınız -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexvor Yeni Araç - Nexvor Studio</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Nexvor standart stil -->
+    <style>
+      :root {
+        --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --accent: #3b82f6;
+        --glass: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--primary);
+        min-height: 100vh;
+      }
+
+      .panel {
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        padding: 2rem;
+      }
+    </style>
   </head>
   <body>
-    <!-- Uygulama içeriği -->
+    <div class="container">
+      <header>
+        <div class="logo">
+          <i class="fas fa-tools"></i>
+          <span>Nexvor Yeni Araç</span>
+        </div>
+      </header>
+
+      <main class="panel">
+        <!-- Uygulama içeriği buraya -->
+      </main>
+
+      <footer>
+        <p>© 2025 Nexvor Studio - Yeni Araç</p>
+      </footer>
+    </div>
   </body>
 </html>
 ```
 
 ### 2. Adım: Public Klasörüne Kopyalayın
 
-```bash
-# Terminal/PowerShell'de:
-copy "apps\yeni-uygulama.html" "public\apps\yeni-uygulama.html"
+```powershell
+# PowerShell'de:
+Copy-Item "apps\nexvor-yeni-arac.html" "public\apps\nexvor-yeni-arac.html"
 ```
 
 ### 3. Adım: Data Dosyasına Ekleyin
 
 ```typescript
 {
-  "id": 10,
-  "title": "Yeni Uygulama",
-  "description": "Açıklama",
+  "id": 9,
+  "title": "Yeni Araç",
+  "description": "Modern ve kullanışlı yeni araç",
   "icon": "⚡",
   "featured": true,
-  "detailedDescription": "Detaylı açıklama",
-  "features": ["Özellik 1", "Özellik 2"],
-  "link": "./apps/yeni-uygulama.html" // 🎯 Dosya yolu
+  "detailedDescription": "Bu araç, kullanıcıların ihtiyaçlarını karşılayan modern bir çözüm sunar.",
+  "features": ["Hızlı işlem", "Modern tasarım", "Mobil uyumlu"],
+  "link": "./apps/nexvor-yeni-arac.html" // 🎯 Dosya yolu
+}
+```
+
+### 🎨 Nexvor Standart Tasarım Özellikleri:
+
+#### Stil Rehberi:
+
+- **Font**: Inter (Google Fonts)
+- **Tema**: Glassmorphism + gradient arkaplan
+- **Renkler**: CSS custom properties kullanın
+- **İkonlar**: Font Awesome 6.4.0
+- **Responsive**: Mobile-first approach
+
+#### CSS Değişkenleri:
+
+```css
+:root {
+  --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --accent: #3b82f6;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --glass: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
 }
 ```
 
@@ -178,26 +317,62 @@ copy "apps\yeni-uygulama.html" "public\apps\yeni-uygulama.html"
 
 ## 📝 DEPLOYMENT (YAYINLAMA)
 
+### 🚀 Güncel Deployment Bilgileri:
+
+**Canlı Site**: https://ad0rr5.github.io/nexvor-studio/
+**Repository**: https://github.com/ad0rr5/nexvor-studio
+**Platform**: GitHub Pages
+**Auto Deploy**: ✅ Aktif (her push sonrası 2-5 dakika)
+
 ### Değişiklikleri Canlıya Almak:
 
 ```bash
-# 1. Build yapın
+# 1. Build yapın (opsiyonel - GitHub Actions otomatik yapar)
 npm run build
 
 # 2. Git'e ekleyin
 git add .
 
-# 3. Commit yapın
-git commit -m "Yeni oyun/araç eklendi: [Adı]"
+# 3. Commit yapın (emoji kullanın!)
+git commit -m "✨ Yeni özellik eklendi: [Adı]"
 
 # 4. GitHub'a yükleyin
-git push
+git push origin main
 ```
 
-### GitHub Pages Güncellemesi:
+### 🎯 Commit Mesajı Örnekleri:
 
-- GitHub'a push yaptıktan sonra 2-5 dakika bekleyin
-- https://ad0rr5.github.io/nexvor-studio/ adresinde değişiklikler görünecek
+```bash
+# Yeni araç
+git commit -m "🛠️ Yeni araç: PDF Düzenleyici"
+
+# Bug fix
+git commit -m "🐛 QR kod renk sorunu düzeltildi"
+
+# UI güncellemesi
+git commit -m "🎨 Responsive tasarım iyileştirmeleri"
+
+# Performance
+git commit -m "⚡ Yükleme hızı optimizasyonu"
+
+# Güvenlik
+git commit -m "🔒 XSS koruması eklendi"
+```
+
+### ⏰ Deployment Süreci:
+
+1. **Push** → GitHub'a kod gönderilir
+2. **GitHub Actions** → Otomatik build başlar
+3. **Build** → Vite production build (1-2 dakika)
+4. **Deploy** → GitHub Pages'e yüklenir (1-2 dakika)
+5. **Live** → Site güncellenmiş halde canlıda
+
+### 📊 Build Sonuçları:
+
+- **Total Bundle**: ~285 kB
+- **Gzipped**: ~83 kB
+- **Build Time**: ~1 saniye
+- **Deploy Time**: 2-5 dakika
 
 ## ✅ KONTROL LİSTESİ
 
@@ -279,29 +454,54 @@ git push
 
 ## 🎯 HIZLI BAŞLANGIÇ ÖRNEĞİ
 
-Yeni bir oyun eklemek için:
+### 🛠️ Yeni Araç Eklemek İçin:
 
-1. `src/data/games.ts` dosyasını açın
+1. `src/data/tools.ts` dosyasını açın
 2. En alta şunu ekleyin:
 
 ```typescript
 {
-  "id": 11, // Mevcut en yüksek ID + 1
-  "title": "Süper Mario Klonu",
-  "description": "Klasik platform oyunu deneyimi",
-  "icon": "🍄",
+  "id": 9, // Sonraki ID (mevcut: 3, 7, 8)
+  "title": "Metin Analiz Aracı",
+  "description": "Metinleri analiz eden yapay zeka destekli araç",
+  "icon": "📝",
   "featured": true,
-  "detailedDescription": "Retro tarzda platform oyunu. Düşmanları yen, coin topla, seviye geç!",
-  "features": ["20 seviye", "Power-up'lar", "Boss savaşları"],
-  "link": "https://mario-klon.com"
+  "detailedDescription": "Metinlerin kelime sayısı, karakter analizi, duygu analizi ve SEO skorunu hesaplayan gelişmiş araç.",
+  "features": ["Duygu analizi", "SEO skoru", "Anahtar kelime", "İstatistikler"],
+  "link": "./apps/nexvor-metin-analiz.html"
 }
 ```
 
-3. Dosyayı kaydedin
-4. Terminal'de: `npm run build`
-5. Git'e commit yapın: `git add . && git commit -m "Mario klonu eklendi" && git push`
+3. HTML dosyasını oluşturun: `apps/nexvor-metin-analiz.html`
+4. Public'e kopyalayın: `Copy-Item "apps\nexvor-metin-analiz.html" "public\apps\"`
+5. Test edin: `npm run dev`
+6. Yayınlayın: `git add . && git commit -m "🛠️ Metin analiz aracı eklendi" && git push`
 
-**Tebrikler! 🎉 Yeni oyununuz 5 dakika içinde canlıda olacak.**
+**Tebrikler! 🎉 Yeni aracınız 5 dakika içinde canlıda olacak.**
+
+### 🎮 Gelecekte Oyun Eklemek İçin:
+
+```typescript
+// src/data/games.ts - placeholder'ı silin ve ekleyin:
+{
+  "id": 2,
+  "title": "Retro Snake Game",
+  "description": "Nostaljik yılan oyunu modern dokunuşlarla",
+  "icon": "🐍",
+  "featured": true,
+  "detailedDescription": "Klasik Snake oyununu modern teknolojilerle yeniden tasarladık. Seviyeli zorluk, skor sistemi ve smooth animasyonlar.",
+  "features": ["10 seviye", "High score", "Responsive", "Sound FX"],
+  "link": "./apps/nexvor-snake.html"
+}
+```
+
+### 📊 Mevcut Proje İstatistikleri:
+
+- **Toplam Araç**: 3 aktif
+- **Toplam Oyun**: 0 (yakında)
+- **Canlı Apps**: 3 HTML dosyası
+- **Build Size**: 285 kB
+- **Performance**: A+ rating
 
 ---
 

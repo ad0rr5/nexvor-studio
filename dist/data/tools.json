@@ -58,5 +58,15 @@
     "detailedDescription": "Güçlü, güvenli şifreler oluşturun. Uzunluk, karakter türleri ve karmaşıklık seviyesini özelleştirin. Toplu şifre oluşturma özelliği ile birden fazla hesap için şifre yaratın.",
     "features": ["Özelleştirilebilir uzunluk", "Karakter seçenekleri", "Güvenlik skorlaması", "Toplu oluşturma", "Şifre gücü analizi"],
     "link": "https://example.com/password-generator"
+  },
+  {
+    "id": 11,
+    "title": "Typing Speed Test - 10FastFingers Style",
+    "description": "10FastFingers tarzı profesyonel yazma hızı testi. Gerçek zamanlı WPM ölçümü.",
+    "icon": "⌨️",
+    "featured": true,
+    "detailedDescription": "10FastFingers.com sitesinin metodolojisini kullanan profesyonel yazma hızı testi. Gerçek zamanlı WPM ölçümü, çoklu dil desteği ve detaylı performans analizi ile yazma becerilerinizi geliştirin.",
+    "features": ["10FastFingers metodolojisi", "Gerçek zamanlı WPM", "3 dil desteği", "Çoklu zorluk seviyesi", "İlerleme grafikleri", "Başarı sertifikaları"],
+    "link": "./apps/nexvor-typing-test-v2.html"
   }
 ]

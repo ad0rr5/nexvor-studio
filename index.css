@@ -232,7 +232,7 @@ nav button.active {
     min-height: calc(100vh - 70px); /* Header yüksekliği hariç */
     text-align: center;
     overflow: hidden;
-    background-image: url('https://i.hizliresim.com/1r2p0as.png');
+    background-image: url('https://i.hizliresim.com/k5rhilk.jpeg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -371,7 +371,7 @@ a.cta-button.secondary:hover, button.cta-button.secondary:hover {
     border-radius: 16px;
     padding: 2rem;
     text-align: center;
-    box-shadow: 
+    box-shadow:
         0 4px 6px var(--shadow-color),
         0 0 0 0 rgba(var(--accent-color-rgb, 0, 123, 255), 0);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -396,7 +396,7 @@ a.cta-button.secondary:hover, button.cta-button.secondary:hover {
 
 .project-card:hover {
     transform: translateY(-12px) scale(1.02);
-    box-shadow: 
+    box-shadow:
         0 20px 40px var(--shadow-color),
         0 0 0 2px rgba(var(--accent-color-rgb, 0, 123, 255), 0.2);
     border-color: var(--accent-color);
@@ -634,20 +634,20 @@ a.cta-button.secondary:hover, button.cta-button.secondary:hover {
   .logo {
       font-size: 1.3rem;
   }
-  
+
   .logo-image {
     width: 32px;
     height: 32px;
   }
-  
+
   .logo-text {
     font-size: 1.3rem;
   }
-  
+
   .mobile-menu-toggle {
       display: block;
   }
-  
+
   nav {
     position: fixed;
     top: 0;
@@ -756,7 +756,7 @@ a.cta-button.secondary:hover, button.cta-button.secondary:hover {
   max-height: 85vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: 
+  box-shadow:
     0 25px 50px rgba(0, 0, 0, 0.3),
     0 0 0 1px rgba(255, 255, 255, 0.1);
   transition: all var(--transition-speed) ease;
@@ -799,8 +799,8 @@ a.cta-button.secondary:hover, button.cta-button.secondary:hover {
   text-align: center;
   padding: 40px 30px 25px;
   border-bottom: 1px solid var(--border-color);
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.05) 0%, 
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.05) 0%,
     rgba(255, 255, 255, 0.02) 100%);
   border-radius: 16px 16px 0 0;
 }
@@ -918,7 +918,7 @@ a.cta-button.secondary:hover, button.cta-button.secondary:hover {
   text-decoration: none;
   font-weight: 700;
   font-size: 1.1rem;
-  box-shadow: 
+  box-shadow:
     0 8px 25px rgba(0, 123, 255, 0.3),
     0 0 0 0 rgba(0, 123, 255, 0.4);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -939,7 +939,7 @@ a.cta-button.secondary:hover, button.cta-button.secondary:hover {
 
 .modal-link-btn:hover {
   transform: translateY(-3px) scale(1.05);
-  box-shadow: 
+  box-shadow:
     0 15px 35px rgba(0, 123, 255, 0.4),
     0 0 0 8px rgba(0, 123, 255, 0.1);
   color: white;
@@ -1107,23 +1107,23 @@ a.cta-button.secondary:hover, button.cta-button.secondary:hover {
     margin: 10px;
     max-height: 90vh;
   }
-  
+
   .modal-header {
     padding: 20px 20px 15px;
   }
-  
+
   .modal-body {
     padding: 20px;
   }
-  
+
   .modal-footer {
     padding: 15px 20px 20px;
   }
-  
+
   .modal-icon {
     font-size: 3rem;
   }
-  
+
   .modal-header h2 {
     font-size: 1.5rem;
   }

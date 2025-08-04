@@ -151,10 +151,7 @@ const ModalFooter = ({ project, onLinkClick }: ModalFooterProps) => {
 
   // Determine button text based on project type
   const getButtonText = () => {
-    if (project.id === 8) { // QR Kod Oluşturucu
-      return '🚀 QR Oluşturucu\'ya Git';
-    }
-    return '🚀 Projeyi Görüntüle';
+    return '🚀 Projeye Git';
   };
 
   return (
