@@ -1,0 +1,655 @@
+
+import React, { useState, useEffect, useRef } from 'react';
+import { createRoot } from 'react-dom/client';
+
+type Theme = 'light' | 'dark';
+type Page = 'home' | 'games' | 'tools' | 'about';
+
+// Ikonlar (SVG)
+const SunIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="5"></circle>
+    <line x1="12" y1="1" x2="12" y2="3"></line>
+    <line x1="12" y1="21" x2="12" y2="23"></line>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+    <line x1="1" y1="12" x2="3" y2="12"></line>
+    <line x1="21" y1="12" x2="23" y2="12"></line>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+  </svg>
+);
+
+const MoonIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+  </svg>
+);
+
+const MenuIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+);
+
+const CloseIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+);
+
+
+// Tema Değiştirici Butonu Bileşeni
+const ThemeSwitcher = ({ theme, toggleTheme }: { theme: Theme, toggleTheme: () => void }) => {
+  return (
+    <button className="theme-switcher" onClick={toggleTheme} aria-label={`Activate ${theme === 'light' ? 'dark' : 'light'} mode`}>
+      {theme === 'light' ? <MoonIcon /> : <SunIcon />}
+    </button>
+  );
+};
+
+// Header Bileşeni
+const Header = ({ theme, toggleTheme, page, setPage }: { theme: Theme, toggleTheme: () => void, page: Page, setPage: (page: Page) => void }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
+  const handleNavClick = (targetPage: Page) => {
+    setPage(targetPage);
+    setMenuOpen(false);
+  }
+
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+  }, [menuOpen]);
+
+  return (
+    <header className="app-header">
+      <div className="container header-content">
+        <div className="logo">
+          <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }}>Nexvor Studio</a>
+        </div>
+        <nav className={menuOpen ? 'open' : ''}>
+          <ul>
+            <li><button onClick={() => handleNavClick('home')} className={page === 'home' ? 'active' : ''}>Ana Sayfa</button></li>
+            <li><button onClick={() => handleNavClick('games')} className={page === 'games' ? 'active' : ''}>Oyunlar</button></li>
+            <li><button onClick={() => handleNavClick('tools')} className={page === 'tools' ? 'active' : ''}>Araçlar</button></li>
+            <li><button onClick={() => handleNavClick('about')} className={page === 'about' ? 'active' : ''}>Hakkımızda</button></li>
+            <li><ThemeSwitcher theme={theme} toggleTheme={toggleTheme} /></li>
+          </ul>
+        </nav>
+        <div className="mobile-menu-toggle" onClick={toggleMenu} aria-label="Toggle menu">
+            {menuOpen ? <CloseIcon /> : <MenuIcon />}
+        </div>
+      </div>
+    </header>
+  );
+};
+
+
+// Intersection Observer Hook'u
+const useIntersectionObserver = (options: IntersectionObserverInit) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+                setIsVisible(true);
+                observer.unobserve(entry.target);
+            }
+        }, options);
+
+        const currentRef = containerRef.current;
+        if (currentRef) {
+            observer.observe(currentRef);
+        }
+
+        return () => {
+            if (currentRef) {
+                observer.unobserve(currentRef);
+            }
+        };
+    }, [containerRef, options]);
+
+    return [containerRef, isVisible] as const;
+};
+
+// Animasyonlu Bölüm Bileşeni
+const AnimatedSection = ({ children, className = '' }: { children: React.ReactNode, className?: string }) => {
+    const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    return (
+        <div ref={ref} className={`section-fade-in ${isVisible ? 'visible' : ''} ${className}`}>
+            {children}
+        </div>
+    );
+};
+
+
+// Hero Bileşeni
+const Hero = ({ setPage }: { setPage: (page: Page) => void }) => {
+    return (
+        <section id="home" className="hero-section">
+            <div className="container hero-content">
+                <AnimatedSection>
+                    <h1 className="hero-title">Gelecek Burada Başlıyor</h1>
+                    <p className="hero-subtitle">Yaratıcı oyunlar ve kullanışlı araçlarla fikirlerinizi hayata geçiriyoruz.</p>
+                    <button onClick={() => setPage('games')} className="cta-button">Projeleri Keşfet</button>
+                </AnimatedSection>
+            </div>
+             <div className="hero-bg"></div>
+        </section>
+    );
+};
+
+// Proje Detay Modalı - Gelişmiş Animasyonlarla
+const ProjectDetailModal = ({ project, isOpen, onClose }: { 
+  project: Project | null, 
+  isOpen: boolean, 
+  onClose: () => void 
+}) => {
+  const [isClosing, setIsClosing] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setMounted(true);
+      setIsClosing(false);
+      // Body scroll'u engelle
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Body scroll'u geri getir
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  const handleClose = () => {
+    setIsClosing(true);
+    // Animasyon bitene kadar bekle
+    setTimeout(() => {
+      setMounted(false);
+      setIsClosing(false);
+      onClose();
+    }, 300);
+  };
+
+  // ESC tuşu ile kapanma
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        handleClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isOpen]);
+
+  if (!mounted || !project) return null;
+
+  return (
+    <div 
+      className={`modal-overlay ${isClosing ? 'closing' : ''}`} 
+      onClick={handleClose}
+      style={{ 
+        pointerEvents: isClosing ? 'none' : 'auto'
+      }}
+    >
+      <div 
+        className="modal-content" 
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <button 
+          className="modal-close" 
+          onClick={handleClose}
+          aria-label="Modalı kapat"
+        >
+          ×
+        </button>
+        
+        <div className="modal-header">
+          <div className="modal-icon" aria-hidden="true">
+            {project.icon}
+          </div>
+          <h2 id="modal-title">{project.title}</h2>
+        </div>
+        
+        <div className="modal-body">
+          <p id="modal-description" className="modal-description">
+            {project.detailedDescription || project.description}
+          </p>
+          
+          {project.features && project.features.length > 0 && (
+            <div className="modal-features">
+              <h3>Özellikler:</h3>
+              <ul>
+                {project.features.map((feature, index) => (
+                  <li key={index} style={{ animationDelay: `${0.7 + index * 0.1}s` }}>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+        
+        <div className="modal-footer">
+          {project.link && (
+            <a 
+              href={project.link} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="modal-link-btn"
+              onClick={(e) => {
+                // Link tıklandığında modal kapanmasın
+                e.stopPropagation();
+              }}
+            >
+              🚀 Projeyi Görüntüle
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Proje Kartı Bileşeni
+interface Project {
+    id: number;
+    title: string;
+    description: string;
+    icon: string;
+    featured: boolean;
+    detailedDescription?: string;
+    features?: string[];
+    link?: string;
+}
+
+const ProjectCard = ({ project, onClick }: { project: Project, onClick: () => void }) => {
+    return (
+        <div className="project-card">
+            <div className="project-card-icon">{project.icon}</div>
+            <h3 className="project-card-title">{project.title}</h3>
+            <p className="project-card-description">{project.description}</p>
+            <button onClick={onClick} className="project-card-link">Daha Fazla Bilgi &rarr;</button>
+        </div>
+    );
+};
+
+
+// Öne Çıkanlar Bölümü
+const FeaturedSection = ({ id, title, projects, onProjectClick }: { 
+  id: string, 
+  title: string, 
+  projects: Project[], 
+  onProjectClick: (project: Project) => void 
+}) => {
+    return (
+        <section id={id} className="featured-section">
+            <div className="container">
+                <AnimatedSection>
+                    <h2 className="section-title">{title}</h2>
+                    <div className="project-grid">
+                        {projects.map((project) => (
+                           <AnimatedSection key={project.id}>
+                             <ProjectCard 
+                               project={project} 
+                               onClick={() => onProjectClick(project)}
+                             />
+                           </AnimatedSection>
+                        ))}
+                    </div>
+                </AnimatedSection>
+            </div>
+        </section>
+    );
+};
+
+
+// Hakkımızda Bölümü (Ana Sayfa için)
+const AboutSection = ({ setPage }: { setPage: (page: Page) => void }) => {
+    return (
+        <section id="about" className="about-section">
+            <div className="container">
+                <AnimatedSection>
+                    <h2 className="section-title">Biz Kimiz?</h2>
+                    <p className="about-text">
+                        2025 yılında henüz lise çağında olan 4 genç girişimci tarafından kurulan Nexvor Studio, teknolojiye olan tutkuyla doğdu. Yaşımız küçük ama hayallerimiz büyük! Oyun geliştirme ve pratik dijital çözümler üretme konusundaki kararlılığımızla, geleceğin teknoloji dünyasında iz bırakmayı hedefliyoruz.
+                    </p>
+                    <button onClick={() => setPage('about')} className="cta-button secondary">Hikayemizin Devamı</button>
+                </AnimatedSection>
+            </div>
+        </section>
+    )
+}
+
+// Footer Bileşeni
+const Footer = () => {
+  return (
+    <footer className="app-footer">
+      <div className="container footer-content">
+        <p>&copy; {new Date().getFullYear()} Nexvor Studio. Tüm hakları saklıdır.</p>
+        <div className="social-links">
+          {/* Gelecekte sosyal medya ikonları buraya eklenecek */}
+          <a href="#" aria-label="Twitter">T</a>
+          <a href="#" aria-label="Discord">D</a>
+          <a href="#" aria-label="Instagram">I</a>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+// JSON dosyalarından verileri yüklemek için utility fonksiyonları
+const loadJSONData = async (path: string): Promise<Project[]> => {
+  try {
+    const response = await fetch(path);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`Error loading data from ${path}:`, error);
+    return [];
+  }
+};
+
+// Custom hook for data loading
+const useProjectData = () => {
+  const [games, setGames] = useState<Project[]>([]);
+  const [tools, setTools] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const [gamesData, toolsData] = await Promise.all([
+          loadJSONData('./data/games.json'),
+          loadJSONData('./data/tools.json')
+        ]);
+        
+        setGames(gamesData);
+        setTools(toolsData);
+      } catch (err) {
+        console.error('Error loading project data:', err);
+        setError('Veri yüklenirken bir hata oluştu');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  return { games, tools, loading, error };
+};
+
+// Loading Bileşeni
+const LoadingSpinner = () => (
+  <div className="loading-container" style={{ 
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    minHeight: '200px',
+    fontSize: '18px',
+    color: 'var(--text-secondary)'
+  }}>
+    <div>📡 Veriler yükleniyor...</div>
+  </div>
+);
+
+// Error Bileşeni
+const ErrorMessage = ({ message }: { message: string }) => (
+  <div className="error-container" style={{ 
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    minHeight: '200px',
+    fontSize: '18px',
+    color: 'var(--accent-color)',
+    textAlign: 'center'
+  }}>
+    <div>⚠️ {message}</div>
+  </div>
+);
+
+// Sayfa Bileşenleri
+const HomePage = ({ setPage, onProjectClick }: { 
+  setPage: (page: Page) => void,
+  onProjectClick: (project: Project) => void 
+}) => {
+    const { games, tools, loading, error } = useProjectData();
+    
+    if (loading) {
+        return (
+            <>
+                <Hero setPage={setPage} />
+                <LoadingSpinner />
+            </>
+        );
+    }
+    
+    if (error) {
+        return (
+            <>
+                <Hero setPage={setPage} />
+                <ErrorMessage message={error} />
+            </>
+        );
+    }
+    
+    const featuredGames = games.filter(game => game.featured);
+    const featuredTools = tools.filter(tool => tool.featured);
+    
+    return (
+        <>
+            <Hero setPage={setPage} />
+            <FeaturedSection 
+              id="games" 
+              title="Popüler Oyunlar" 
+              projects={featuredGames} 
+              onProjectClick={onProjectClick}
+            />
+            <FeaturedSection 
+              id="tools" 
+              title="Popüler Araçlar" 
+              projects={featuredTools} 
+              onProjectClick={onProjectClick}
+            />
+            <AboutSection setPage={setPage} />
+        </>
+    );
+};
+
+const AllProjectsPage = ({ title, projects, onProjectClick, loading, error }: { 
+  title: string, 
+  projects: Project[], 
+  onProjectClick: (project: Project) => void,
+  loading?: boolean,
+  error?: string | null
+}) => {
+    if (loading) {
+        return (
+            <section className="page-container">
+                <div className="container">
+                    <h2 className="section-title">{title}</h2>
+                    <LoadingSpinner />
+                </div>
+            </section>
+        );
+    }
+    
+    if (error) {
+        return (
+            <section className="page-container">
+                <div className="container">
+                    <h2 className="section-title">{title}</h2>
+                    <ErrorMessage message={error} />
+                </div>
+            </section>
+        );
+    }
+    
+    return (
+        <section className="page-container">
+            <div className="container">
+                <AnimatedSection>
+                    <h2 className="section-title">{title}</h2>
+                    <div className="project-grid">
+                        {projects.map((project) => (
+                           <AnimatedSection key={project.id}>
+                             <ProjectCard 
+                               project={project} 
+                               onClick={() => onProjectClick(project)}
+                             />
+                           </AnimatedSection>
+                        ))}
+                    </div>
+                </AnimatedSection>
+            </div>
+        </section>
+    );
+};
+
+const AboutPage = () => {
+    return (
+        <section className="page-container about-page">
+            <div className="container">
+                <AnimatedSection>
+                    <h2 className="section-title">Hakkımızda</h2>
+                    <div className="about-page-content">
+                        <p>
+                            <strong>Nexvor Studio, 2025 yılında henüz lise çağında olan 4 genç girişimci tarafından kuruldu.</strong> Dersler arasında kodlama öğrenen, okuldan sonra oyun geliştirme projelerinde çalışan ve geleceğin teknolojilerini bugünden keşfetmeye kararlı dört arkadaşız. Yaşımız küçük olabilir ama hayallerimiz ve hedeflerimiz büyük!
+                        </p>
+                        <p>
+                            Teknolojiye olan tutkumuz bizi bir araya getirdi. Her birimiz farklı yeteneklere sahipken - kimisi kodlamada, kimisi tasarımda, kimisi proje yönetiminde parlıyor - ortak amacımız insanların hayatını kolaylaştıran ve eğlendiren dijital ürünler yaratmak. Lise hayatımız ve öğrenme sürecimiz devam ederken, boş zamanlarımızı bu stüdyoyu büyütmeye adıyoruz.
+                        </p>
+                        <p>
+                           Nexvor Studio olarak, genç bakış açımızla sektöre yenilikçi çözümler getirmeyi, yaşıtlarımıza ilham vermeyi ve teknoloji dünyasında iz bırakmayı hedefliyoruz. Her proje bizim için bir öğrenme deneyimi ve geleceğe atılan bir adım. Çünkü biz, geleceğin teknoloji liderleriyiz! 🚀
+                        </p>
+                    </div>
+                </AnimatedSection>
+            </div>
+        </section>
+    );
+};
+
+
+// Ana Uygulama Bileşeni
+const App = () => {
+  // Tema state'ini yönet
+  const [theme, setTheme] = useState<Theme>(() => {
+    const storedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return (storedTheme as Theme) || (systemPrefersDark ? 'dark' : 'light');
+  });
+
+  const [page, setPage] = useState<Page>('home');
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Data loading
+  const { games, tools, loading, error } = useProjectData();
+
+  // Tema değiştiğinde DOM'a ve localStorage'a yansıt
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+  
+  // Sayfa değiştiğinde en üste scroll yap
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [page]);
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
+
+  const handleProjectClick = (project: Project) => {
+    setSelectedProject(project);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProject(null);
+  };
+
+  const renderPage = () => {
+      switch (page) {
+          case 'games':
+              return <AllProjectsPage 
+                title="Tüm Oyunlar" 
+                projects={games} 
+                onProjectClick={handleProjectClick}
+                loading={loading}
+                error={error}
+              />;
+          case 'tools':
+              return <AllProjectsPage 
+                title="Tüm Araçlar" 
+                projects={tools} 
+                onProjectClick={handleProjectClick}
+                loading={loading}
+                error={error}
+              />;
+          case 'about':
+              return <AboutPage />;
+          case 'home':
+          default:
+              return <HomePage 
+                setPage={setPage} 
+                onProjectClick={handleProjectClick}
+              />;
+      }
+  }
+
+  return (
+    <>
+      <Header theme={theme} toggleTheme={toggleTheme} page={page} setPage={setPage} />
+      <main>
+          {renderPage()}
+      </main>
+      <Footer />
+      <ProjectDetailModal 
+        project={selectedProject} 
+        isOpen={isModalOpen} 
+        onClose={closeModal} 
+      />
+    </>
+  );
+};
+
+// React uygulamasını DOM'a render et
+const container = document.getElementById('root');
+if (container) {
+  const root = createRoot(container);
+  root.render(<App />);
+}
