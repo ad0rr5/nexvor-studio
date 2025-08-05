@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexvor Typing Speed Test - 10FastFingers Style</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⌨️</text></svg>">
+
+    <!-- Chart.js for progress visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        select {
+            border: none;
+            background: transparent;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .timer-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .timer {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* 10FastFingers Style Word Display - 2 Lines */
+        .word-display {
+            background: #fff;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            height: 120px; /* Fixed height for exactly 2 lines */
+            font-family: 'Courier New', monospace;
+            font-size: 1.4rem;
+            line-height: 2.4;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .word-container {
+            position: relative;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .word-line {
+            height: 60px; /* Each line height */
+            white-space: nowrap;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .word-display div {
+            margin-bottom: 0;
+        }
+
+        .word {
+            display: inline-block;
+            padding: 3px 6px;
+            margin: 2px 3px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            cursor: default;
+            font-weight: 500;
+        }
+
+        .word.current {
+            background: #4CAF50;
+            color: white;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+            transform: scale(1.05);
+        }
+
+        .word.correct {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .word.incorrect {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .word.pending {
+            background: transparent;
+            color: #666;
+        }
+
+        .input-section {
+            text-align: center;
+        }
+
+        .word-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            font-family: 'Courier New', monospace;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .word-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .word-input:disabled {
+            background: #f8f9fa;
+            cursor: not-allowed;
+        }
+
+        .start-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .start-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .start-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 30px;
+            display: none;
+            text-align: center;
+        }
+
+        .results.show {
+            display: block;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .results h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .result-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .result-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        .certificate {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #FF8C00;
+        }
+
+        .certificate h3 {
+            color: #8B4513;
+            margin-bottom: 10px;
+        }
+
+        .chart-container {
+            max-width: 400px;
+            margin: 20px auto;
+        }
+
+        /* Dark Mode */
+        .dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .dark-mode .container {
+            background: rgba(30, 30, 30, 0.95);
+            color: #e0e0e0;
+        }
+
+        .dark-mode .header h1 {
+            color: #81c784;
+        }
+
+        .dark-mode .control-group {
+            background: #2a2a2a;
+            border-color: #444;
+        }
+
+        .dark-mode .word-display {
+            background: #2a2a2a;
+            border-color: #444;
+            color: #e0e0e0;
+        }
+
+        .dark-mode .word.pending {
+            color: #aaa;
+        }
+
+        .dark-mode .word.current {
+            background: #66bb6a;
+            color: white;
+            box-shadow: 0 0 8px rgba(102, 187, 106, 0.5);
+        }
+
+        .dark-mode .word-input {
+            background: #2a2a2a;
+            border-color: #444;
+            color: #e0e0e0;
+        }
+
+        .dark-mode .word-input:focus {
+            border-color: #81c784;
+        }
+
+        .dark-mode .results {
+            background: #2a2a2a;
+        }
+
+        .dark-mode .result-card {
+            background: #333;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .stats-bar {
+                gap: 15px;
+            }
+
+            .word-display {
+                font-size: 1.2rem;
+                padding: 20px;
+            }
+
+            .timer {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Karanlık Mod</button>
+            <h1>⌨️ Nexvor Typing Speed Test</h1>
+            <p>10FastFingers tarzı profesyonel yazma hızı testi</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>🌍 Dil</label>
+                <select id="language">
+                    <option value="tr">🇹🇷 Türkçe</option>
+                    <option value="en">🇺🇸 English</option>
+                    <option value="fr">🇫🇷 Français</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>⏱️ Süre</label>
+                <select id="duration">
+                    <option value="15">15 saniye</option>
+                    <option value="30">30 saniye</option>
+                    <option value="60" selected>1 dakika</option>
+                    <option value="120">2 dakika</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>🎯 Zorluk</label>
+                <select id="difficulty">
+                    <option value="easy">Kolay</option>
+                    <option value="medium" selected>Orta</option>
+                    <option value="hard">Zor</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat">
+                <span class="stat-value" id="wpm">0</span>
+                <span class="stat-label">WPM</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value" id="accuracy">100%</span>
+                <span class="stat-label">Doğruluk</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value" id="errors">0</span>
+                <span class="stat-label">Hata</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value" id="typed">0</span>
+                <span class="stat-label">Yazılan</span>
+            </div>
+        </div>
+
+        <div class="timer-section">
+            <div class="timer" id="timer">60</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="word-display" id="wordDisplay">
+            <div class="word-container" id="wordContainer">
+                Test başlatmak için aşağıdaki butona tıklayın...
+            </div>
+        </div>
+
+        <div class="input-section">
+            <input type="text" class="word-input" id="wordInput" placeholder="Kelimeyi yazın ve SPACE ile geçin..." disabled>
+            <br>
+            <button class="start-btn" id="startBtn" onclick="startTest()">🚀 Test Başlat</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>🏆 Test Sonuçları</h2>
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-value" id="finalWPM">0</div>
+                    <div class="result-label">WPM</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value" id="finalAccuracy">0%</div>
+                    <div class="result-label">Doğruluk</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value" id="finalCPM">0</div>
+                    <div class="result-label">CPM</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value" id="finalTyped">0</div>
+                    <div class="result-label">Kelime</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="progressChart"></canvas>
+            </div>
+
+            <div id="certificateArea"></div>
+
+            <button class="start-btn" onclick="startTest()">🔄 Tekrar Test Et</button>
+            <button class="start-btn" onclick="shareResults()" style="margin-left: 10px;">📤 Sonuçları Paylaş</button>
+        </div>
+    </div>
+
+    <script>
+        // Word lists for different languages and difficulties
+        const wordLists = {
+            tr: {
+                easy: [
+                    "ve", "bir", "bu", "da", "de", "o", "ki", "ne", "var", "ben", "sen", "biz", "siz", "onlar",
+                    "ile", "için", "olan", "olan", "gibi", "kadar", "sonra", "önce", "şimdi", "bugün", "yarın",
+                    "ev", "iş", "okul", "yol", "su", "çay", "köpek", "kedi", "masa", "sandalye", "kitap", "kalem",
+                    "güzel", "büyük", "küçük", "iyi", "kötü", "yeni", "eski", "sıcak", "soğuk", "hızlı", "yavaş"
+                ],
+                medium: [
+                    "bilgisayar", "teknoloji", "internet", "program", "sistem", "veri", "bilgi", "yazılım", "donanım",
+                    "telefon", "mesaj", "e-posta", "sosyal", "medya", "platform", "uygulama", "içerik", "kullanıcı",
+                    "proje", "geliştirme", "tasarım", "çözüm", "problem", "analiz", "rapor", "sunum", "toplantı",
+                    "yönetim", "strateji", "hedef", "başarı", "kalite", "hizmet", "müşteri", "satış", "pazarlama"
+                ],
+                hard: [
+                    "demokratikleştirilemeyebileceklerin", "muvaffakiyetsizleştiricileştiriverme",
+                    "çekoslavakyalılaştıramadıklarımızdan", "afyonkarahisarlılaştıramadıklarımız",
+                    "epistemoloji", "fenomenoloji", "hermenötik", "dekonstruksiyon", "postmodernizm",
+                    "uluslararasılaştırılamayabilecek", "koordinasyonsuzlaştırabilecekleri"
+                ]
+            },
+            en: {
+                easy: [
+                    "the", "be", "to", "of", "and", "a", "in", "that", "have", "i", "it", "for", "not", "on",
+                    "with", "he", "as", "you", "do", "at", "this", "but", "his", "by", "from", "they", "she",
+                    "or", "an", "will", "my", "one", "all", "would", "there", "their", "what", "so", "up", "out",
+                    "if", "about", "who", "get", "which", "go", "me", "when", "make", "can", "like", "time", "no"
+                ],
+                medium: [
+                    "computer", "technology", "internet", "program", "system", "data", "information", "software",
+                    "hardware", "phone", "message", "email", "social", "media", "platform", "application",
+                    "content", "user", "project", "development", "design", "solution", "problem", "analysis",
+                    "report", "presentation", "meeting", "management", "strategy", "target", "success", "quality"
+                ],
+                hard: [
+                    "internationalization", "responsibilities", "characteristics", "implementations", "transformations",
+                    "epistemology", "phenomenology", "hermeneutics", "deconstruction", "postmodernism",
+                    "incomprehensibilities", "uncharacteristically", "indistinguishability", "constitutionality"
+                ]
+            },
+            fr: {
+                easy: [
+                    "le", "de", "et", "à", "un", "il", "être", "et", "en", "avoir", "que", "pour", "dans", "ce",
+                    "son", "une", "sur", "avec", "ne", "se", "pas", "tout", "plus", "par", "grand", "celui",
+                    "me", "bien", "te", "si", "donc", "aller", "voir", "savoir", "faire", "dire", "venir", "vouloir"
+                ],
+                medium: [
+                    "ordinateur", "technologie", "internet", "programme", "système", "données", "information",
+                    "logiciel", "matériel", "téléphone", "message", "courriel", "social", "média", "plateforme",
+                    "application", "contenu", "utilisateur", "projet", "développement", "conception", "solution"
+                ],
+                hard: [
+                    "internationalization", "incompréhensibilité", "indistinguabilité", "constitutionnalité",
+                    "épistémologie", "phénoménologie", "herméneutique", "déconstruction", "postmodernisme"
+                ]
+            }
+        };
+
+        // Game state
+        let gameState = {
+            isActive: false,
+            startTime: null,
+            endTime: null,
+            currentWordIndex: 0,
+            words: [],
+            typedWords: [],
+            correctWords: 0,
+            totalChars: 0,
+            correctChars: 0,
+            errors: 0,
+            timeLeft: 60,
+            wpmHistory: [],
+            wordsPerLine: 8, // Will be calculated dynamically
+            currentLine: 0,
+            visibleLines: [] // Currently visible lines
+        };
+
+        let testInterval = null;
+        let updateInterval = null;
+
+        // DOM elements
+        const elements = {
+            timer: document.getElementById('timer'),
+            progressFill: document.getElementById('progressFill'),
+            wordDisplay: document.getElementById('wordDisplay'),
+            wordContainer: document.getElementById('wordContainer'),
+            wordInput: document.getElementById('wordInput'),
+            startBtn: document.getElementById('startBtn'),
+            wpm: document.getElementById('wpm'),
+            accuracy: document.getElementById('accuracy'),
+            errors: document.getElementById('errors'),
+            typed: document.getElementById('typed'),
+            results: document.getElementById('results'),
+            language: document.getElementById('language'),
+            duration: document.getElementById('duration'),
+            difficulty: document.getElementById('difficulty')
+        };
+
+        // Event listeners
+        elements.wordInput.addEventListener('input', handleWordInput);
+        elements.wordInput.addEventListener('keydown', handleKeyDown);
+
+        // Start test function
+        function startTest() {
+            resetGame();
+            generateWordsInLines();
+            displayWords();
+
+            gameState.isActive = true;
+            gameState.startTime = Date.now();
+            gameState.timeLeft = parseInt(elements.duration.value);
+
+            elements.wordInput.disabled = false;
+            elements.wordInput.focus();
+            elements.wordInput.value = '';
+            elements.startBtn.textContent = 'Test Devam Ediyor...';
+            elements.startBtn.disabled = true;
+            elements.results.classList.remove('show');
+
+            // Start timers
+            testInterval = setInterval(updateTimer, 1000);
+            updateInterval = setInterval(updateStats, 100);
+        }
+
+        // Reset game state
+        function resetGame() {
+            gameState = {
+                isActive: false,
+                startTime: null,
+                endTime: null,
+                currentWordIndex: 0,
+                words: [],
+                typedWords: [],
+                correctWords: 0,
+                totalChars: 0,
+                correctChars: 0,
+                errors: 0,
+                timeLeft: parseInt(elements.duration.value),
+                wpmHistory: [],
+                wordsPerLine: 8, // Will be recalculated
+                currentLine: 0,
+                visibleLines: []
+            };
+
+            if (testInterval) clearInterval(testInterval);
+            if (updateInterval) clearInterval(updateInterval);
+
+            elements.timer.textContent = elements.duration.value;
+            elements.progressFill.style.width = '0%';
+            elements.wordInput.disabled = true;
+            elements.startBtn.textContent = '🚀 Test Başlat';
+            elements.startBtn.disabled = false;
+
+            // Reset transform
+            if (elements.wordContainer) {
+                elements.wordContainer.style.transform = 'translateY(0)';
+            }
+        }
+
+        // Calculate how many words fit in one line based on screen width
+        function calculateWordsPerLine() {
+            const displayWidth = elements.wordDisplay.clientWidth - 40; // minus padding
+            const avgWordWidth = 80; // approximate width per word including spacing
+            const wordsPerLine = Math.floor(displayWidth / avgWordWidth);
+            return Math.max(6, Math.min(wordsPerLine, 12)); // between 6-12 words
+        }
+
+        // Generate words in lines format
+        function generateWordsInLines() {
+            const lang = elements.language.value;
+            const difficulty = elements.difficulty.value;
+            const wordList = wordLists[lang][difficulty];
+
+            // Calculate actual words per line based on container width
+            gameState.wordsPerLine = calculateWordsPerLine();
+
+            gameState.words = [];
+            gameState.visibleLines = [];
+
+            // Generate enough words for the test duration
+            const wordsNeeded = parseInt(elements.duration.value) * 4;
+
+            for (let i = 0; i < wordsNeeded; i++) {
+                const randomIndex = Math.floor(Math.random() * wordList.length);
+                gameState.words.push(wordList[randomIndex]);
+            }
+
+            // Create initial lines
+            createInitialLines();
+        }
+
+        // Create initial lines with proper width fitting
+        function createInitialLines() {
+            const allWords = gameState.words;
+            let currentLineWords = [];
+            let lineIndex = 0;
+
+            gameState.visibleLines = [];
+
+            // Create first 2 lines that fit properly in width
+            for (let i = 0; i < 2; i++) {
+                const lineWords = createLineThatFits(allWords, lineIndex * 15); // start from different points
+                gameState.visibleLines.push(lineWords);
+                lineIndex++;
+            }
+        }
+
+        // Create a line that fits within the container width
+        function createLineThatFits(allWords, startIndex) {
+            const words = [];
+            const maxWidth = elements.wordDisplay.clientWidth - 50; // Leave some margin
+            let currentWidth = 0;
+
+            for (let i = startIndex; i < allWords.length && words.length < 15; i++) {
+                const word = allWords[i];
+                const wordWidth = estimateWordWidth(word);
+
+                if (currentWidth + wordWidth > maxWidth && words.length > 4) {
+                    break; // Line is full
+                }
+
+                words.push(word);
+                currentWidth += wordWidth;
+            }
+
+            return words;
+        }
+
+        // Estimate word width in pixels
+        function estimateWordWidth(word) {
+            return word.length * 16 + 20; // ~16px per character + margin/padding
+        }
+
+        // Display current 2 lines with accurate word tracking
+        function displayWords() {
+            if (!gameState.visibleLines.length) return;
+
+            // Calculate current position based on actual visible words
+            let totalWordsInPreviousLines = 0;
+            let currentLineIndex = 0;
+            let currentWordInLine = 0;
+
+            // Find which line contains current word
+            let wordCounter = 0;
+            for (let lineIdx = 0; lineIdx < gameState.visibleLines.length; lineIdx++) {
+                const lineWordCount = gameState.visibleLines[lineIdx].length;
+                if (wordCounter + lineWordCount > gameState.currentWordIndex) {
+                    currentLineIndex = lineIdx;
+                    currentWordInLine = gameState.currentWordIndex - wordCounter;
+                    break;
+                }
+                wordCounter += lineWordCount;
+            }
+
+            // Check if we need to scroll (when finishing first visible line)
+            if (currentLineIndex >= 1 && currentWordInLine === 0 && gameState.currentWordIndex > 0) {
+                scrollToNextLine();
+                return;
+            }
+
+            let html = '';
+            let globalIndex = 0;
+
+            gameState.visibleLines.forEach((lineWords, lineIndex) => {
+                html += '<div class="word-line">';
+
+                lineWords.forEach((word, wordInLineIndex) => {
+                    let className = 'word pending';
+
+                    if (globalIndex < gameState.currentWordIndex) {
+                        className = gameState.typedWords[globalIndex] === word ? 'word correct' : 'word incorrect';
+                    } else if (globalIndex === gameState.currentWordIndex) {
+                        className = 'word current';
+                    }
+
+                    html += `<span class="${className}" data-index="${globalIndex}">${word}</span> `;
+                    globalIndex++;
+                });
+
+                html += '</div>';
+            });
+
+            elements.wordContainer.innerHTML = html;
+        }
+
+        // Scroll to next line when first line is complete
+        function scrollToNextLine() {
+            gameState.currentLine++;
+
+            // Remove first line
+            gameState.visibleLines.shift();
+
+            // Create next line that fits properly
+            const wordsUsed = gameState.visibleLines.reduce((total, line) => total + line.length, 0);
+            const nextLineStartIndex = gameState.currentWordIndex + wordsUsed;
+
+            if (nextLineStartIndex < gameState.words.length) {
+                const nextLineWords = createLineThatFits(gameState.words, nextLineStartIndex);
+                if (nextLineWords.length > 0) {
+                    gameState.visibleLines.push(nextLineWords);
+                }
+            }
+
+            // Animate scroll
+            elements.wordContainer.style.transform = 'translateY(-60px)';
+
+            setTimeout(() => {
+                displayWords();
+                elements.wordContainer.style.transform = 'translateY(0)';
+            }, 150);
+        }
+
+        // Handle word input - ONLY advance on SPACE key
+        function handleWordInput(e) {
+            if (!gameState.isActive) return;
+
+            const inputValue = e.target.value;
+            const currentWord = gameState.words[gameState.currentWordIndex];
+
+            // Show real-time feedback but don't advance automatically
+            updateCurrentWordFeedback(inputValue, currentWord);
+        }
+
+        // Handle key press - advance only on SPACE
+        function handleKeyDown(e) {
+            if (!gameState.isActive) return;
+
+            // Advance to next word ONLY on SPACE key
+            if (e.key === ' ') {
+                e.preventDefault(); // Prevent space in input
+
+                const inputValue = e.target.value.trim();
+                const currentWord = gameState.words[gameState.currentWordIndex];
+
+                // Record the typed word
+                gameState.typedWords[gameState.currentWordIndex] = inputValue;
+
+                // Check if word is correct
+                if (inputValue === currentWord) {
+                    gameState.correctWords++;
+                    gameState.correctChars += currentWord.length;
+                } else {
+                    gameState.errors++;
+                }
+
+                gameState.totalChars += currentWord.length;
+                gameState.currentWordIndex++;
+
+                // Clear input for next word
+                e.target.value = '';
+
+                // Update display
+                displayWords();
+
+                // Check if test should end
+                if (gameState.currentWordIndex >= gameState.words.length) {
+                    endTest();
+                }
+
+                return;
+            }
+
+            // Prevent backspace from going back in browser
+            if (e.key === 'Backspace' && e.target.value === '') {
+                e.preventDefault();
+            }
+        }
+
+        // Update visual feedback for current word
+        function updateCurrentWordFeedback(inputValue, currentWord) {
+            // This could show character-by-character feedback in the future
+            // For now, just update the display
+            if (inputValue.length > currentWord.length) {
+                // Prevent typing more than word length
+                elements.wordInput.value = inputValue.substring(0, currentWord.length);
+            }
+        }
+
+        // Update timer
+        function updateTimer() {
+            if (gameState.timeLeft <= 0) {
+                endTest();
+                return;
+            }
+
+            elements.timer.textContent = gameState.timeLeft;
+
+            // Update progress bar
+            const totalTime = parseInt(elements.duration.value);
+            const progress = ((totalTime - gameState.timeLeft) / totalTime) * 100;
+            elements.progressFill.style.width = progress + '%';
+
+            gameState.timeLeft--;
+        }
+
+        // Update statistics
+        function updateStats() {
+            if (!gameState.isActive || gameState.totalChars === 0) return;
+
+            const timeElapsed = (Date.now() - gameState.startTime) / 1000 / 60; // minutes
+            const wpm = Math.round((gameState.correctWords) / timeElapsed);
+            const accuracy = Math.round((gameState.correctChars / gameState.totalChars) * 100);
+
+            elements.wpm.textContent = wpm || 0;
+            elements.accuracy.textContent = accuracy + '%';
+            elements.errors.textContent = gameState.errors;
+            elements.typed.textContent = gameState.currentWordIndex;
+
+            // Store WPM history
+            gameState.wpmHistory.push({
+                time: timeElapsed,
+                wpm: wpm || 0
+            });
+        }
+
+        // End test
+        function endTest() {
+            gameState.isActive = false;
+            gameState.endTime = Date.now();
+
+            elements.wordInput.disabled = true;
+            elements.startBtn.textContent = '🚀 Test Başlat';
+            elements.startBtn.disabled = false;
+
+            if (testInterval) clearInterval(testInterval);
+            if (updateInterval) clearInterval(updateInterval);
+
+            showResults();
+        }
+
+        // Show results
+        function showResults() {
+            const timeElapsed = (gameState.endTime - gameState.startTime) / 1000 / 60;
+            const finalWPM = Math.round(gameState.correctWords / timeElapsed);
+            const finalCPM = Math.round(gameState.correctChars / timeElapsed);
+            const accuracy = gameState.totalChars > 0 ? Math.round((gameState.correctChars / gameState.totalChars) * 100) : 0;
+
+            document.getElementById('finalWPM').textContent = finalWPM;
+            document.getElementById('finalAccuracy').textContent = accuracy + '%';
+            document.getElementById('finalCPM').textContent = finalCPM;
+            document.getElementById('finalTyped').textContent = gameState.currentWordIndex;
+
+            // Create progress chart
+            createProgressChart();
+
+            // Generate certificate
+            generateCertificate(finalWPM, accuracy);
+
+            elements.results.classList.add('show');
+        }
+
+        // Create progress chart
+        function createProgressChart() {
+            const ctx = document.getElementById('progressChart').getContext('2d');
+
+            if (window.progressChart) {
+                window.progressChart.destroy();
+            }
+
+            const labels = gameState.wpmHistory.map((_, index) => Math.round(index * 5) + 's');
+            const data = gameState.wpmHistory.map(point => point.wpm);
+
+            window.progressChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'WPM Progress',
+                        data: data,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Typing Speed Progress'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'WPM'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Generate certificate
+        function generateCertificate(wpm, accuracy) {
+            const certificateArea = document.getElementById('certificateArea');
+
+            let certificate = '';
+
+            if (wpm >= 70 && accuracy >= 95) {
+                certificate = `
+                    <div class="certificate">
+                        <h3>🏆 TYPING MASTER CERTIFICATE</h3>
+                        <p><strong>Exceptional Performance!</strong></p>
+                        <p>⚡ ${wpm} WPM | 🎯 ${accuracy}% Accuracy</p>
+                        <p><em>Outstanding typing skills demonstrated.</em></p>
+                    </div>
+                `;
+            } else if (wpm >= 50 && accuracy >= 90) {
+                certificate = `
+                    <div class="certificate">
+                        <h3>🥇 ADVANCED LEVEL CERTIFICATE</h3>
+                        <p><strong>Great Performance!</strong></p>
+                        <p>⚡ ${wpm} WPM | 🎯 ${accuracy}% Accuracy</p>
+                        <p><em>Advanced typing skills achieved.</em></p>
+                    </div>
+                `;
+            } else if (wpm >= 30 && accuracy >= 80) {
+                certificate = `
+                    <div class="certificate">
+                        <h3>🥈 INTERMEDIATE CERTIFICATE</h3>
+                        <p><strong>Good Performance!</strong></p>
+                        <p>⚡ ${wpm} WPM | 🎯 ${accuracy}% Accuracy</p>
+                        <p><em>Solid typing foundation established.</em></p>
+                    </div>
+                `;
+            }
+
+            certificateArea.innerHTML = certificate;
+        }
+
+        // Share results
+        function shareResults() {
+            const wpm = document.getElementById('finalWPM').textContent;
+            const accuracy = document.getElementById('finalAccuracy').textContent;
+
+            const shareText = `🏆 Nexvor Typing Test Results:\n⚡ ${wpm} WPM\n🎯 ${accuracy} Accuracy\n\nTest your speed: ${window.location.href}`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Nexvor Typing Speed Test Results',
+                    text: shareText
+                });
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('📋 Results copied to clipboard!');
+                });
+            }
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const themeButton = document.querySelector('.theme-toggle');
+
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode');
+                themeButton.textContent = '🌙 Karanlık Mod';
+                localStorage.setItem('typingTestTheme', 'light');
+            } else {
+                body.classList.add('dark-mode');
+                themeButton.textContent = '☀️ Aydınlık Mod';
+                localStorage.setItem('typingTestTheme', 'dark');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update DOM elements after page load
+            elements.wordContainer = document.getElementById('wordContainer');
+
+            // Load saved theme
+            const savedTheme = localStorage.getItem('typingTestTheme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.querySelector('.theme-toggle').textContent = '☀️ Aydınlık Mod';
+            }
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && gameState.isActive) {
+                    endTest();
+                }
+                if (e.ctrlKey && e.key === 'Enter') {
+                    startTest();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

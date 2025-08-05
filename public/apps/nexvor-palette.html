@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexvor Palette - Modern Color Picker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: linear-gradient(135deg, #667eea 0%, #5d03b8 100%);
+      --bg-light: #ffffff;
+      --text-light: #1f2937;
+      --text-secondary-light: #6b7280;
+      --card-light: #ffffff;
+      --border-light: #e5e7eb;
+      --shadow-light: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+      --bg-dark: #0f172a;
+      --text-dark: #f8fafc;
+      --text-secondary-dark: #94a3b8;
+      --card-dark: #1e293b;
+      --border-dark: #334155;
+      --shadow-dark: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      background: var(--bg-primary);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow-x: hidden;
+    }
+
+    body.light {
+      background: #f8fafc;
+      color: var(--text-light);
+    }
+
+    body.dark {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    /* Header Styles */
+    header {
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    body.light header {
+      background: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    body.dark header {
+      background: rgba(15, 23, 42, 0.9);
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .theme-toggle {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: inherit;
+      padding: 0.75rem 1.25rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    body.light .theme-toggle {
+      background: var(--card-light);
+      border: 1px solid var(--border-light);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    body.dark .theme-toggle {
+      background: var(--card-dark);
+      border: 1px solid var(--border-dark);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      min-height: calc(100vh - 80px);
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      opacity: 0.8;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Color Picker Section */
+    .color-picker-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .color-picker-card {
+      background: var(--card-light);
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: var(--shadow-light);
+      border: 1px solid var(--border-light);
+      transition: all 0.3s ease;
+    }
+
+    body.dark .color-picker-card {
+      background: var(--card-dark);
+      border: 1px solid var(--border-dark);
+      box-shadow: var(--shadow-dark);
+    }
+
+    .color-picker-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.35);
+    }
+
+    .picker-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .color-display {
+      width: 200px;
+      height: 200px;
+      border-radius: 20px;
+      border: 4px solid white;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .color-display::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.1) 50%, transparent 50%);
+      background-size: 20px 20px;
+    }
+
+    .color-input {
+      opacity: 1;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Color Information */
+    .color-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .color-info h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      letter-spacing: 0.025em;
+    }
+
+    .dark-theme .color-info h3 {
+      color: #f8fafc;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    .color-format {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .format-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    body.dark .format-row {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .format-label {
+      font-weight: 600;
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    body.dark .format-label {
+      color: #f8fafc;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    .format-value {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    body.dark .format-value {
+      color: #f8fafc;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .format-value:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    /* Copy Button */
+    .copy-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-self: center;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .copy-btn.copied {
+      background: var(--success);
+    }
+
+    /* Color Palette */
+    .palette-section {
+      margin-top: 2rem;
+    }
+
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .palette-color {
+      aspect-ratio: 1;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 3px solid transparent;
+    }
+
+    .palette-color:hover {
+      transform: scale(1.1);
+      border-color: white;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .color-picker-section {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+
+      header {
+        padding: 1rem;
+      }
+
+      .color-display {
+        width: 150px;
+        height: 150px;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-hover);
+    }
+  </style>
+</</head>
+<body class="light">
+  <header>
+    <div class="logo">
+      <div class="logo-icon">N</div>
+      Nexvor Palette
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <span id="themeIcon">🌙</span>
+      <span id="themeText">Dark Mode</span>
+    </button>
+  </header>
+
+  <div class="container">
+    <div class="hero fade-in">
+      <h1>Nexvor Color Palette</h1>
+      <p>Professional color picker with modern design and advanced features</p>
+    </div>
+
+    <div class="color-picker-section fade-in">
+      <div class="color-picker-card">
+        <div class="picker-wrapper">
+          <div class="color-display" id="colorDisplay" style="background-color: #3b82f6;">
+            <input type="color" class="color-input" id="colorPicker" value="#3b82f6" />
+          </div>
+          <button class="copy-btn" onclick="copyMainColor()">
+            <span id="copyIcon">📋</span>
+            <span id="copyText">Copy Color</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="color-picker-card">
+        <div class="color-info">
+          <h3>Color Information</h3>
+
+          <div class="color-format">
+            <div class="format-row">
+              <span class="format-label">HEX</span>
+              <span class="format-value" id="hexValue" onclick="copyToClipboard(this)">#3b82f6</span>
+            </div>
+            <div class="format-row">
+              <span class="format-label">RGB</span>
+              <span class="format-value" id="rgbValue" onclick="copyToClipboard(this)">rgb(59, 130, 246)</span>
+            </div>
+            <div class="format-row">
+              <span class="format-label">HSL</span>
+              <span class="format-value" id="hslValue" onclick="copyToClipboard(this)">hsl(217, 91%, 60%)</span>
+            </div>
+            <div class="format-row">
+              <span class="format-label">HSV</span>
+              <span class="format-value" id="hsvValue" onclick="copyToClipboard(this)">hsv(217, 76%, 96%)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="color-picker-card palette-section fade-in">
+      <h3>Color Palette</h3>
+      <div class="palette-grid" id="paletteGrid"></div>
+    </div>
+  </div>
+
+  <script>
+    class ColorPicker {
+      constructor() {
+        this.colorPicker = document.getElementById('colorPicker');
+        this.colorDisplay = document.getElementById('colorDisplay');
+        this.hexValue = document.getElementById('hexValue');
+        this.rgbValue = document.getElementById('rgbValue');
+        this.hslValue = document.getElementById('hslValue');
+        this.hsvValue = document.getElementById('hsvValue');
+        this.paletteGrid = document.getElementById('paletteGrid');
+        this.themeIcon = document.getElementById('themeIcon');
+        this.themeText = document.getElementById('themeText');
+
+        this.colorHistory = JSON.parse(localStorage.getItem('colorHistory')) || [];
+        this.currentColor = '#3b82f6';
+
+        this.init();
+      }
+
+      init() {
+        this.colorPicker.addEventListener('input', (e) => {
+          this.updateColor(e.target.value);
+        });
+
+        this.updateColor(this.currentColor);
+        this.generatePalette();
+        this.loadTheme();
+      }
+
+      updateColor(color) {
+        this.currentColor = color;
+        this.colorDisplay.style.backgroundColor = color;
+
+        const rgb = this.hexToRgb(color);
+        const hsl = this.rgbToHsl(rgb.r, rgb.g, rgb.b);
+        const hsv = this.rgbToHsv(rgb.r, rgb.g, rgb.b);
+
+        this.hexValue.textContent = color.toUpperCase();
+        this.rgbValue.textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+        this.hslValue.textContent = `hsl(${Math.round(hsl.h)}, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%)`;
+        this.hsvValue.textContent = `hsv(${Math.round(hsv.h)}, ${Math.round(hsv.s)}%, ${Math.round(hsv.v)}%)`;
+
+        this.addToHistory(color);
+        this.generatePalette();
+      }
+
+      hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : null;
+      }
+
+      rgbToHsl(r, g, b) {
+        r /= 255; g /= 255; b /= 255;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h, s, l = (max + min) / 2;
+
+        if (max === min) {
+          h = s = 0;
+        } else {
+          const d = max - min;
+          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+          }
+          h /= 6;
+        }
+        return { h: h * 360, s: s * 100, l: l * 100 };
+      }
+
+      rgbToHsv(r, g, b) {
+        r /= 255; g /= 255; b /= 255;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h, s, v = max;
+        const d = max - min;
+        s = max === 0 ? 0 : d / max;
+
+        if (max === min) {
+          h = 0;
+        } else {
+          switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+          }
+          h /= 6;
+        }
+        return { h: h * 360, s: s * 100, v: v * 100 };
+      }
+
+      generatePalette() {
+        const colors = [];
+        const rgb = this.hexToRgb(this.currentColor);
+
+        // Generate color variations
+        for (let i = 0; i < 12; i++) {
+          const factor = (i - 6) / 6;
+          const newR = Math.max(0, Math.min(255, rgb.r + (factor * 100)));
+          const newG = Math.max(0, Math.min(255, rgb.g + (factor * 100)));
+          const newB = Math.max(0, Math.min(255, rgb.b + (factor * 100)));
+
+          colors.push(this.rgbToHex(newR, newG, newB));
+        }
+
+        // Add complementary and triadic colors
+        const hsl = this.rgbToHsl(rgb.r, rgb.g, rgb.b);
+        colors.push(this.hslToHex((hsl.h + 180) % 360, hsl.s, hsl.l)); // Complementary
+        colors.push(this.hslToHex((hsl.h + 120) % 360, hsl.s, hsl.l)); // Triadic 1
+        colors.push(this.hslToHex((hsl.h + 240) % 360, hsl.s, hsl.l)); // Triadic 2
+
+        this.renderPalette([...new Set(colors)]);
+      }
+
+      rgbToHex(r, g, b) {
+        return "#" + ((1 << 24) + (Math.round(r) << 16) + (Math.round(g) << 8) + Math.round(b)).toString(16).slice(1);
+      }
+
+      hslToHex(h, s, l) {
+        s /= 100; l /= 100;
+        const c = (1 - Math.abs(2 * l - 1)) * s;
+        const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+        const m = l - c / 2;
+        let r = 0, g = 0, b = 0;
+
+        if (0 <= h && h < 60) { r = c; g = x; b = 0; }
+        else if (60 <= h && h < 120) { r = x; g = c; b = 0; }
+        else if (120 <= h && h < 180) { r = 0; g = c; b = x; }
+        else if (180 <= h && h < 240) { r = 0; g = x; b = c; }
+        else if (240 <= h && h < 300) { r = x; g = 0; b = c; }
+        else if (300 <= h && h < 360) { r = c; g = 0; b = x; }
+
+        r = Math.round((r + m) * 255);
+        g = Math.round((g + m) * 255);
+        b = Math.round((b + m) * 255);
+
+        return this.rgbToHex(r, g, b);
+      }
+
+      renderPalette(colors) {
+        this.paletteGrid.innerHTML = '';
+        colors.forEach(color => {
+          const colorDiv = document.createElement('div');
+          colorDiv.className = 'palette-color';
+          colorDiv.style.backgroundColor = color;
+          colorDiv.title = color;
+          colorDiv.onclick = () => {
+            this.colorPicker.value = color;
+            this.updateColor(color);
+          };
+          this.paletteGrid.appendChild(colorDiv);
+        });
+      }
+
+      addToHistory(color) {
+        if (!this.colorHistory.includes(color)) {
+          this.colorHistory.unshift(color);
+          this.colorHistory = this.colorHistory.slice(0, 20);
+          localStorage.setItem('colorHistory', JSON.stringify(this.colorHistory));
+        }
+      }
+
+      loadTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.className = savedTheme;
+        this.updateThemeButton(savedTheme);
+      }
+
+      updateThemeButton(theme) {
+        if (theme === 'dark') {
+          this.themeIcon.textContent = '☀️';
+          this.themeText.textContent = 'Light Mode';
+        } else {
+          this.themeIcon.textContent = '🌙';
+          this.themeText.textContent = 'Dark Mode';
+        }
+      }
+    }
+
+    // Initialize color picker
+    const colorPickerApp = new ColorPicker();
+
+    // Theme toggle function
+    function toggleTheme() {
+      const body = document.body;
+      const currentTheme = body.classList.contains('dark') ? 'light' : 'dark';
+
+      body.className = currentTheme;
+      localStorage.setItem('theme', currentTheme);
+      colorPickerApp.updateThemeButton(currentTheme);
+    }
+
+    // Copy to clipboard functions
+    async function copyToClipboard(element) {
+      try {
+        await navigator.clipboard.writeText(element.textContent);
+        const originalText = element.textContent;
+        element.textContent = 'Copied!';
+        element.style.background = 'var(--success)';
+        element.style.color = 'white';
+
+        setTimeout(() => {
+          element.textContent = originalText;
+          element.style.background = '';
+          element.style.color = '';
+        }, 1000);
+      } catch (err) {
+        console.error('Failed to copy: ', err);
+      }
+    }
+
+    function copyMainColor() {
+      const copyBtn = document.querySelector('.copy-btn');
+      const copyIcon = document.getElementById('copyIcon');
+      const copyText = document.getElementById('copyText');
+
+      copyToClipboard({ textContent: colorPickerApp.currentColor });
+
+      copyBtn.classList.add('copied');
+      copyIcon.textContent = '✓';
+      copyText.textContent = 'Copied!';
+
+      setTimeout(() => {
+        copyBtn.classList.remove('copied');
+        copyIcon.textContent = '📋';
+        copyText.textContent = 'Copy Color';
+      }, 1000);
+    }
+
+    // Add fade-in animation on load
+    window.addEventListener('load', () => {
+      document.querySelectorAll('.fade-in').forEach((el, index) => {
+        setTimeout(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, index * 200);
+      });
+    });
+  </script>
+</body>
+</html>

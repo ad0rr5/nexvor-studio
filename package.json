@@ -1,0 +1,45 @@
+{
+  "name": "nexvor-studio",
+  "description": "Modern portfolio website for Nexvor Studio - Gaming and tools showcase",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "homepage": "https://nexvor.studio",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ad0rr5/nexvor-studio.git"
+  },
+  "keywords": [
+    "portfolio",
+    "react",
+    "typescript",
+    "vite",
+    "nexvor",
+    "gaming",
+    "tools"
+  ],
+  "author": "Nexvor Studio Team",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "npm run build && gh-pages -d dist",
+    "start": "npm run dev"
+  },
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/caseless": "^0.12.5",
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.1.1",
+    "@types/react-dom": "^19.1.1",
+    "@types/request": "^2.48.13",
+    "@vitejs/plugin-react": "^4.3.3",
+    "gh-pages": "^6.3.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}
